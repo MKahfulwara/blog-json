@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 //--Posts--//
-const fetchPosts = createAsyncThunk('post/posts', async ({ pageNumber, limit }, { rejectWithValue }) => {
+const fetchPosts = createAsyncThunk('post/posts', async (pageNumber, { rejectWithValue }) => {
+  console.log(pageNumber)
   try {
-    const { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=${limit}`)
+    const { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=10`)
     return data
   } catch (error) {
     return rejectWithValue(error.response.data)

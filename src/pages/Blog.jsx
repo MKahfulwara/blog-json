@@ -16,25 +16,31 @@ const Blog = () => {
   const { posts, isLoading } = useSelector((state) => state.blog)
 
   useEffect(() => {
-    dispatch(fetchPosts(pageNumber, 10))
+    dispatch(fetchPosts(pageNumber))
     setFilteredPosts(posts)
   }, [dispatch, pageNumber])
-  console.log(filteredPosts)
+
+  useEffect(() => {
+    if (posts.length) setFilteredPosts(posts)
+  }, [posts])
+
   const handleSearch = (event) => {
     const searchQuery = event.target.value
-    console.log(searchQuery)
     setSearchText(searchQuery)
-    const filtered = posts.filter((post) => post.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    const filtered = posts.filter(
+      (post) => post.title.toLowerCase().includes(searchQuery.toLowerCase()) || post.body.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     setFilteredPosts(filtered)
   }
+
   return (
     <Grid containter spacing={2}>
-      <TextField label='Search' value={searchText} onChange={handleSearch} style={{ marginBottom: '50px' }} />
+      <TextField label='Search' value={searchText} onChange={handleSearch} sx={{ alignSelf: 'center', marginLeft: '30px', width: '80%' }} />
       {isLoading ? (
-        <Grid item xs={12}>
-          <Grid container justify='center' spacing={2}>
+        <Grid item xs={12} spacing={3}>
+          <Grid container justify='center' spacing={5}>
             {filteredPosts.map((post) => (
-              <Card sx={{ maxWidth: 350 }}>
+              <Card sx={{ maxWidth: 350, margin: 10 }}>
                 <CardContent key={post.id}>
                   <Typography variant='h5'>{post.title}</Typography>
                   <Typography color='text.secondary'>{post.body}</Typography>
